@@ -1,6 +1,7 @@
 import { fetchStrapiAPI } from "@/lib/strapi";
 import BlocksContent from "@/components/BlocksContent";
 import TeamSlider from "@/components/TeamSlider";
+export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
   let about;

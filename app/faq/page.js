@@ -2,6 +2,8 @@
 import { fetchStrapiAPI } from "@/lib/strapi";
 import FAQAccordion from "@/components/FAQAcc";
 
+export const dynamic = "force-dynamic";
+
 export default async function FAQPage() {
   let faqPage;
 

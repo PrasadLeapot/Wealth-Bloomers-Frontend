@@ -1,69 +1,166 @@
-import Image from "next/image";
+import { fetchStrapiAPI, getStrapiMedia } from "@/lib/strapi";
+import BlocksContent from "@/components/BlocksContent";
+import HowItWorksSection from "@/components/HowItWorks";
 
-export default function Home() {
+export default async function HomePage() {
+  let home;
+
+  try {
+    home = await fetchStrapiAPI("home");
+  } catch (error) {
+    console.error(error);
+    return <p className="error-message">
+      Unable to load Home page content.
+    </p>;
+  }
+
+  const image = getStrapiMedia(
+    home.heroImage?.[0]?.url
+  );
+
+  // console.log("Hero Image Data:", home.heroImage);
+  // console.log(
+  //   "Hero Image URL:",
+  //   getStrapiMedia(home.heroImage?.url)
+  // );
+  
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <section className="hero">
+        <div className="hero-content">
+          <p className="eyebrow">
+            WELCOME TO
           </p>
+
+          <h1>{home.pageTitle}</h1>
+
+          <p>{home.heroSubtitle}</p>
+
+          {(home.playStoreUrl || home.appStoreUrl || home.appButtonUrl) && (
+            <div className="store-buttons">
+              {home.playStoreUrl && (
+                <a
+                  href={home.playStoreUrl}
+                  className="store-btn store-btn--play"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Get Wealth Bloomers on Google Play"
+                >
+                  <svg
+                    className="store-icon"
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="#4285F4"
+                      d="M3.61 1.814L13.793 12 3.61 22.186a1.98 1.98 0 0 1-.61-1.436V3.25c0-.544.22-1.063.61-1.436z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M17.202 8.59L5.864 2.658a1.96 1.96 0 0 0-2.254.212L13.793 12l3.409-3.41z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M17.202 15.41L13.793 12 3.61 22.13c.62.58 1.52.71 2.254.212l11.338-6.932z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M20.506 10.701l-3.304-2.111L13.793 12l3.409 3.41 3.304-2.111a1.5 1.5 0 0 0 0-2.598z"
+                    />
+                  </svg>
+                  <span>
+                    <small>Get it on</small>
+                    <strong>Google Play</strong>
+                  </span>
+                </a>
+              )}
+
+              {(home.appStoreUrl || home.appButtonUrl) && (
+                <a
+                  href={home.appStoreUrl || home.appButtonUrl}
+                  className="store-btn store-btn--ios"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Download Wealth Bloomers on the App Store for iOS"
+                >
+                  <svg
+                    className="store-icon"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.33c.64-.78 1.08-1.86.96-2.94-.93.04-2.05.62-2.71 1.4-.58.68-1.1 1.79-.96 2.84 1.04.08 2.07-.52 2.71-1.3z" />
+                  </svg>
+                  <span>
+                    <small>Download on the</small>
+                    <strong>App Store</strong>
+                  </span>
+                </a>
+              )}
+            </div>
+          )}
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {image && (
+          <img
+            src={image}
+            alt="Wealth Bloomers"
+            className="hero-image"
+          />
+        )}
+      </section>
+
+      <section className="section">
+        <h2>{home.introductionTitle}</h2>
+        <BlocksContent content={home.introduction} />
+      </section>
+
+      <section className="section mission">
+        <h2>{home.missionTitle}</h2>
+        <BlocksContent content={home.missionDescription} />
+      </section>
+
+      {/* <section className="section">
+        <h2>{home.howItWorksTitle}</h2>
+
+        <div className="steps-grid">
+          {home.steps?.map((step, index) => (
+            <article className="step-card" key={index}>
+              <span>{step.number}</span>
+              <h3>{step.title}</h3>
+              <BlocksContent
+                content={step.description}
+              />
+            </article>
+          ))}
         </div>
-      </main>
-    </div>
+      </section> */}
+
+      <HowItWorksSection home={home} />
+
+      <section className="section">
+        <h2>{home.jewellersTitle}</h2>
+
+        <div className="jewellers-grid">
+          {home.jewellers?.map((jeweller, index) => (
+            <article className="jeweller-card" key={index}>
+              {jeweller.logo?.url && (
+                <img
+                  src={getStrapiMedia(jeweller.logo.url)}
+                  alt={jeweller.name}
+                />
+              )}
+
+              <h3>{jeweller.name}</h3>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }

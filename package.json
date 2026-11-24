@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@strapi/blocks-react-renderer": "^1.0.2",
     "next": "16.4.6",
+    "qs": "^6.17.1",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -17,6 +19,7 @@
     "@tailwindcss/turbopack": "4.3.3",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "husky": "^9.1.7",
     "tailwindcss": "4.3.3"
   }
 }

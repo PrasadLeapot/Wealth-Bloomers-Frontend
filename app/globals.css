@@ -73,7 +73,6 @@ button:focus-visible {
 /* Navbar */
 
 .navbar {
-  position: sticky;
   top: 0;
   z-index: 100;
   background: #010D4A;
@@ -103,14 +102,15 @@ button:focus-visible {
 
 .navbar nav {
   display: flex;
-  gap: 32px;
-  font-size: 15px;
+  gap: 85px;
+  font-size: 12px;
   font-weight: 500;
+  margin-right: 24px;
 }
 
 .navbar nav a {
   position: relative;
-  padding-bottom: 4px;
+  margin-left: 14px;
   font-weight: 600;
   font-size: 18px;
 }
@@ -277,6 +277,7 @@ button:focus-visible {
   background: #6f87bf;
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
+
 }
 
 .page-hero {
@@ -653,5 +654,434 @@ button:focus-visible {
     width: 36px;
     height: 36px;
     font-size: 16px;
+  }
+}
+
+
+
+/* =========================================
+   WEALTH BLOOMERS - HOMEPAGE REDESIGN
+========================================= */
+
+/* Main homepage wrapper */
+.home-page {
+  overflow: hidden;
+  background: #f7fbff;
+}
+
+/* =========================================
+   HERO SECTION
+========================================= */
+
+.home-page .hero {
+  position: relative;
+  min-height: 650px;
+  padding: 90px var(--container-pad);
+  gap: 70px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(11, 210, 160, 0.18),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(69, 108, 255, 0.25),
+      transparent 35%
+    ),
+    linear-gradient(125deg, #010b38 0%, #080b65 55%, #101c83 100%);
+}
+
+/* Decorative background circles */
+.home-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(11, 210, 160, 0.13);
+  border-radius: 50%;
+  top: -180px;
+  right: 10%;
+  pointer-events: none;
+}
+
+.home-page .hero::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  bottom: -180px;
+  left: 35%;
+  pointer-events: none;
+}
+
+.home-page .hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  flex: 1;
+}
+
+.home-page .hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #0bd2a0;
+  font-size: 13px;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+.home-page .hero .eyebrow::before {
+  content: "";
+  width: 35px;
+  height: 2px;
+  background: #0bd2a0;
+}
+
+.home-page .hero h1 {
+  font-size: clamp(42px, 5.3vw, 68px);
+  line-height: 1.13;
+  letter-spacing: -1.8px;
+  font-weight: 700;
+  margin: 25px 0;
+  color: #ffffff;
+}
+
+.home-page .hero-content > p:not(.eyebrow) {
+  max-width: 540px;
+  color: #d1def7;
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+/* Hero image */
+.home-page .hero-image {
+  position: relative;
+  z-index: 2;
+  width: 47%;
+  max-width: 570px;
+  min-height: 380px;
+  max-height: 470px;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 1px solid rgba(11, 210, 160, 0.3);
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.35),
+    0 0 35px rgba(11, 210, 160, 0.08);
+}
+
+/* =========================================
+   APP STORE BUTTONS
+========================================= */
+
+.home-page .store-buttons {
+  margin-top: 36px;
+  gap: 16px;
+}
+
+.home-page .store-btn {
+  min-height: 62px;
+  padding: 11px 21px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.home-page .store-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3);
+}
+
+.home-page .store-btn--play {
+  border: 1px solid rgba(11, 210, 160, 0.55);
+}
+
+.home-page .store-btn--ios {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* =========================================
+   COMMON HOMEPAGE SECTIONS
+========================================= */
+
+.home-page .section {
+  position: relative;
+  padding: 85px var(--container-pad);
+}
+
+.home-page .section h2 {
+  position: relative;
+  color: #080b65;
+  font-size: clamp(30px, 3.5vw, 42px);
+  line-height: 1.25;
+  margin-top: 0;
+  margin-bottom: 28px;
+  letter-spacing: -0.7px;
+}
+
+/* Accent underline */
+.home-page .section h2::after {
+  content: "";
+  display: block;
+  width: 65px;
+  height: 4px;
+  margin-top: 16px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #0bd2a0, #97f6ff);
+}
+
+/* Introduction */
+.home-page .section:first-of-type {
+  background: #ffffff;
+}
+
+.home-page .section:first-of-type .rich-content {
+  max-width: 1050px;
+}
+
+/* Keep existing rich text paragraph styling readable */
+.home-page .rich-content p {
+  color: #536579;
+  font-size: 16px;
+  line-height: 1.95;
+  margin-bottom: 14px;
+  max-width: 1050px;
+}
+
+.home-page .rich-content ul,
+.home-page .rich-content ol {
+  padding-left: 24px;
+  margin: 12px 0;
+  color: #536579;
+}
+
+.home-page .rich-content li {
+  margin-bottom: 8px;
+}
+
+/* =========================================
+   MISSION SECTION
+========================================= */
+
+.home-page .mission {
+  background:
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(11, 210, 160, 0.12),
+      transparent 35%
+    ),
+    linear-gradient(120deg, #07104c, #101d78);
+
+  border: none;
+  padding-top: 90px;
+  padding-bottom: 90px;
+}
+
+.home-page .mission h2 {
+  color: #ffffff;
+}
+
+.home-page .mission h2::after {
+  background: linear-gradient(90deg, #0bd2a0, #97f6ff);
+}
+
+.home-page .mission .rich-content p,
+.home-page .mission .rich-content li {
+  color: #d4e1f5;
+  font-size: 16px;
+  line-height: 1.95;
+}
+
+/* =========================================
+   HOW IT WORKS / STEPS
+========================================= */
+
+.home-page .steps-grid {
+  gap: 24px;
+  margin-top: 38px;
+}
+
+.home-page .step-card {
+  padding: 30px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e6eef7;
+  box-shadow: 0 8px 30px rgba(8, 11, 101, 0.05);
+  transition: all 0.3s ease;
+}
+
+.home-page .step-card:hover {
+  transform: translateY(-7px);
+  border-color: #0bd2a0;
+  box-shadow: 0 18px 38px rgba(8, 11, 101, 0.1);
+}
+
+.home-page .step-card span {
+  display: inline-flex;
+  width: 55px;
+  height: 55px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #e8fbf5;
+  color: #008c70;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.home-page .step-card h3 {
+  color: #080b65;
+  font-size: 21px;
+  margin-bottom: 12px;
+}
+
+.home-page .step-card p {
+  color: #64748b;
+  line-height: 1.8;
+}
+
+/* =========================================
+   JEWELLERS SECTION
+========================================= */
+
+.home-page .jewellers-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+  margin-top: 38px;
+}
+
+.home-page .jeweller-card {
+  min-height: 190px;
+  padding: 30px 24px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e7edf5;
+
+  box-shadow: 0 8px 25px rgba(8, 11, 101, 0.045);
+  transition: all 0.3s ease;
+}
+
+.home-page .jeweller-card:hover {
+  transform: translateY(-7px);
+  border-color: rgba(11, 210, 160, 0.65);
+  box-shadow: 0 18px 35px rgba(8, 11, 101, 0.1);
+}
+
+.home-page .jeweller-card img {
+  width: 100%;
+  height: 85px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.home-page .jeweller-card h3 {
+  color: #080b65;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 1024px) {
+  .home-page .hero {
+    gap: 35px;
+    min-height: 570px;
+  }
+
+  .home-page .hero h1 {
+    font-size: clamp(38px, 5vw, 52px);
+  }
+
+  .home-page .hero-image {
+    width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page .hero {
+    flex-direction: column;
+    text-align: left;
+    padding: 65px 6%;
+    gap: 38px;
+    min-height: auto;
+  }
+
+  .home-page .hero-content {
+    max-width: 100%;
+  }
+
+  .home-page .hero h1 {
+    font-size: clamp(38px, 9vw, 52px);
+  }
+
+  .home-page .hero-content > p:not(.eyebrow) {
+    font-size: 16px;
+  }
+
+  .home-page .hero-image {
+    width: 100%;
+    max-width: 100%;
+    min-height: 250px;
+    max-height: 350px;
+  }
+
+  .home-page .section {
+    padding: 60px 6%;
+  }
+
+  .home-page .jewellers-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .home-page .step-card {
+    padding: 25px;
+  }
+
+  .home-page .mission {
+    padding-top: 65px;
+    padding-bottom: 65px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page .hero h1 {
+    font-size: 38px;
+  }
+
+  .home-page .store-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-page .store-btn {
+    width: 100%;
+    max-width: 230px;
+  }
+
+  .home-page .jewellers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .section h2 {
+    font-size: 30px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .home-page *,
+  .home-page *::before,
+  .home-page *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }

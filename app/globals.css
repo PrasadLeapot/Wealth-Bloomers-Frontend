@@ -9,7 +9,6 @@
 }
 
 :root {
-  /* Wealth Bloomers Refined Brand Palette */
   --navy: #06113C;
   --navy-deep: #030924;
   --navy-light: #162B7A;
@@ -141,7 +140,7 @@ button:focus-visible {
   color: var(--accent);
 }
 
-/* Mobile Toggle Button (hidden on desktop) */
+/* Mobile Toggle Button */
 
 .nav-toggle {
   display: none;
@@ -172,7 +171,6 @@ button:focus-visible {
   transition: transform 0.28s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.2s ease, background 0.2s ease;
 }
 
-/* Morph 3 bars into a crisp X when open */
 .nav-toggle--open {
   background: rgba(7, 196, 150, 0.18);
   border-color: var(--accent);
@@ -330,6 +328,90 @@ button:focus-visible {
   font-weight: 700;
   color: var(--white);
   letter-spacing: 0.1px;
+}
+
+/* How It Works Numbered Step Timeline */
+
+.step-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+}
+
+.step-timeline__line {
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  left: 50%;
+  width: 4px;
+  transform: translateX(-50%);
+  background: #0b1f5e;
+  z-index: 0;
+}
+
+.step-timeline__btn {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: #8c9096;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.step-timeline__btn--active {
+  background: #0b1f5e;
+  box-shadow: 0 8px 20px rgba(11, 31, 94, 0.28);
+}
+
+@media (max-width: 768px) {
+  .how-it-works-layout {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .step-timeline {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .step-timeline__line {
+    top: 50%;
+    bottom: auto;
+    left: 24px;
+    right: 24px;
+    width: auto;
+    height: 4px;
+    transform: translateY(-50%);
+  }
+
+  .step-timeline__btn {
+    width: 48px;
+    height: 48px;
+    font-size: 17px;
+  }
+
+  .how-it-works-center {
+    max-width: 100%;
+  }
+
+  .step-active-description {
+    max-width: 340px;
+  }
 }
 
 /* Sections */
@@ -718,62 +800,6 @@ button:focus-visible {
 
 @media (max-width: 768px) {
   .navbar {
-    flex-direction: column;
-    padding: 16px 6%;
-    gap: 14px;
-  }
-
-  .navbar nav {
-    gap: 18px;
-    margin-right: 0;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 64px 6%;
-    min-height: auto;
-    gap: 36px;
-  }
-
-  .hero-image {
-    width: 100%;
-    max-height: 320px;
-  }
-
-  .steps-grid,
-  .jewellers-grid,
-  .team-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section,
-  .page-hero {
-    padding: 56px 6%;
-  }
-
-  .person-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-links {
-    flex-wrap: wrap;
-    gap: 16px 24px;
-  }
-
-  .slider-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
@@ -836,5 +862,45 @@ button:focus-visible {
     background: rgba(7, 196, 150, 0.14);
     color: var(--accent);
   }
-  /* ...keep the rest of your existing @media (max-width: 768px) rules below... */
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 64px 6%;
+    min-height: auto;
+    gap: 36px;
+  }
+
+  .hero-image {
+    width: 100%;
+    max-height: 320px;
+  }
+
+  .steps-grid,
+  .jewellers-grid,
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section,
+  .page-hero {
+    padding: 56px 6%;
+  }
+
+  .person-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 16px 24px;
+  }
+
+  .slider-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
 }

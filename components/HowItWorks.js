@@ -1,11 +1,13 @@
 "use client";
+
 import { useState } from "react";
 import BlocksContent from "@/components/BlocksContent";
 import { getStrapiMedia } from "@/lib/strapi";
 
 export default function HowItWorksSection({ home }) {
   const steps = home?.steps || [];
-  const [activeIndex, setActiveIndex] = useState(steps.length > 1 ? 1 : 0);
+  // Always start on Step 1 (index 0)
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const activeStep = steps[activeIndex] || steps[0];
   const activeScreenUrl = getStrapiMedia(
@@ -37,6 +39,7 @@ export default function HowItWorksSection({ home }) {
 
       {steps.length > 0 && (
         <div
+          className="how-it-works-layout"
           style={{
             display: "flex",
             flexWrap: "wrap",
@@ -47,31 +50,13 @@ export default function HowItWorksSection({ home }) {
             margin: "0 auto",
           }}
         >
-          {/* Left: Numbered Step Timeline */}
+          {/* Left (desktop) / Top (mobile): Numbered Step Timeline */}
           <div
             role="tablist"
             aria-label="How it works steps"
-            style={{
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "44px",
-            }}
+            className="step-timeline"
           >
-            <span
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                top: "24px",
-                bottom: "24px",
-                left: "50%",
-                width: "4px",
-                transform: "translateX(-50%)",
-                background: "#0b1f5e",
-                zIndex: 0,
-              }}
-            />
+            <span aria-hidden="true" className="step-timeline__line" />
             {steps.map((step, index) => {
               const isActive = index === activeIndex;
               return (
@@ -81,25 +66,9 @@ export default function HowItWorksSection({ home }) {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActiveIndex(index)}
-                  style={{
-                    position: "relative",
-                    zIndex: 1,
-                    width: "58px",
-                    height: "58px",
-                    borderRadius: "50%",
-                    border: "none",
-                    background: isActive ? "#0b1f5e" : "#8c9096",
-                    color: "#ffffff",
-                    fontSize: "20px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    display: "grid",
-                    placeItems: "center",
-                    boxShadow: isActive
-                      ? "0 8px 20px rgba(11, 31, 94, 0.28)"
-                      : "0 2px 6px rgba(0, 0, 0, 0.12)",
-                    transition: "all 0.2s ease",
-                  }}
+                  className={`step-timeline__btn ${
+                    isActive ? "step-timeline__btn--active" : ""
+                  }`}
                 >
                   {step.number ?? index + 1}
                 </button>
@@ -109,6 +78,7 @@ export default function HowItWorksSection({ home }) {
 
           {/* Center: Mobile Frame & Active Step Description */}
           <div
+            className="how-it-works-center"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -175,7 +145,15 @@ export default function HowItWorksSection({ home }) {
                       color: "#0b1f5e",
                     }}
                   >
-                    <p style={{ fontSize: "10px", fontWeight: 700, marginBottom: "155px" }}>Welcome to Wealth Boomers App</p>
+                    <p
+                      style={{
+                        fontSize: "10px",
+                        fontWeight: 700,
+                        marginBottom: "155px",
+                      }}
+                    >
+                      Welcome to Wealth Boomers App
+                    </p>
                     <div style={{ fontSize: "28px", fontWeight: 700 }}>
                       {activeStep?.number ?? activeIndex + 1}
                     </div>
@@ -189,6 +167,7 @@ export default function HowItWorksSection({ home }) {
 
             {activeStep?.description && (
               <div
+                className="step-active-description"
                 style={{
                   marginTop: "16px",
                   textAlign: "center",

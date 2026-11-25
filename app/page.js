@@ -120,10 +120,10 @@ export default async function HomePage() {
         <BlocksContent content={home.introduction} />
       </section>
 
-      <section className="section mission">
+      {/* <section className="section mission">
         <h2>{home.missionTitle}</h2>
         <BlocksContent content={home.missionDescription} />
-      </section>
+      </section> */}
 
       {/* <section className="section">
         <h2>{home.howItWorksTitle}</h2>

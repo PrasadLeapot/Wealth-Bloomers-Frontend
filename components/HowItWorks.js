@@ -3,6 +3,7 @@
 import { useState } from "react";
 import BlocksContent from "@/components/BlocksContent";
 import { getStrapiMedia } from "@/lib/strapi";
+import Image from "next/image";
 
 export default function HowItWorksSection({ home }) {
   const steps = home?.steps || [];
@@ -147,13 +148,21 @@ export default function HowItWorksSection({ home }) {
                   >
                     <p
                       style={{
-                        fontSize: "10px",
+                        fontSize: "14px",
                         fontWeight: 700,
-                        marginBottom: "155px",
+                        marginBottom: "80px",
                       }}
                     >
                       Welcome to Wealth Boomers App
                     </p>
+                    <Image
+                              src="/logo.png"
+                              alt="Wealth Bloomers Logo"
+                              width={200}
+                              height={80}
+                              className="logo-img"
+                              priority
+                            />
                     <div style={{ fontSize: "28px", fontWeight: 700 }}>
                       {activeStep?.number ?? activeIndex + 1}
                     </div>

@@ -9,9 +9,9 @@ export default function PersonCard({ person }) {
       : `${STRAPI_URL}${person.photo.url}`
     : null;
 
-  console.log("Person:", person.name);
-  console.log("Photo object:", person.photo);
-  console.log("Image URL:", imageUrl);
+  // console.log("Person:", person.name);
+  // console.log("Photo object:", person.photo);
+  // console.log("Image URL:", imageUrl);
 
   return (
     <article className="person-card">

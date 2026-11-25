@@ -163,7 +163,8 @@ export default function HowItWorksSection({ home }) {
                               className="logo-img"
                               priority
                             />
-                    <div style={{ fontSize: "28px", fontWeight: 700 }}>
+                    <div style={{ fontSize: "20px", fontWeight: 700 }}>
+                      Step &nbsp;
                       {activeStep?.number ?? activeIndex + 1}
                     </div>
                     <div style={{ marginTop: "8px", fontWeight: 600 }}>

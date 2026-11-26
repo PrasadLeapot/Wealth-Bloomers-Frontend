@@ -118,7 +118,7 @@ export default async function HomePage() {
       <HowItWorksSection home={home} />
 
       <section className="section">
-        <h2>{home.jewellersTitle}</h2>
+        <h2 style={{ textAlign: 'center', fontSize: '2rem' }}>{home.jewellersTitle}</h2>
 
         <div className="jewellers-grid">
           {home.jewellers?.map((jeweller, index) => (

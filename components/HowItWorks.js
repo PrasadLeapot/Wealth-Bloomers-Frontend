@@ -1,19 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import BlocksContent from "@/components/BlocksContent";
 import { getStrapiMedia } from "@/lib/strapi";
-import Image from "next/image";
+
+function resolveMediaUrl(media) {
+  if (!media) return null;
+  const raw =
+    typeof media === "string"
+      ? media
+      : media?.url ||
+        media?.data?.attributes?.url ||
+        media?.attributes?.url ||
+        null;
+  return raw ? getStrapiMedia(raw) : null;
+}
 
 export default function HowItWorksSection({ home }) {
   const steps = home?.steps || [];
-  // Always start on Step 1 (index 0)
   const [activeIndex, setActiveIndex] = useState(0);
 
   const activeStep = steps[activeIndex] || steps[0];
-  const activeScreenUrl = getStrapiMedia(
-    activeStep?.screenImage?.url || activeStep?.screenImage
-  );
+  const activeScreenUrl = resolveMediaUrl(activeStep?.screenImage);
 
   return (
     <section
@@ -46,8 +55,8 @@ export default function HowItWorksSection({ home }) {
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "center",
-            gap: "40px",
-            maxWidth: "1120px",
+            gap: "44px",
+            maxWidth: "1140px",
             margin: "0 auto",
           }}
         >
@@ -85,42 +94,59 @@ export default function HowItWorksSection({ home }) {
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
-              maxWidth: "300px",
+              maxWidth: "320px",
             }}
           >
             <div
               style={{
                 position: "relative",
-                width: "200px",
-                height: "400px",
-                background: "#14161a",
-                borderRadius: "36px",
+                width: "240px",
+                height: "480px",
+                background: "linear-gradient(145deg, #1d2128, #0e1014)",
+                borderRadius: "40px",
                 padding: "10px",
                 boxShadow:
-                  "0 18px 40px rgba(15, 23, 42, 0.18), inset 0 0 0 2px #3b4048",
+                  "0 24px 48px rgba(11, 31, 94, 0.22), 0 0 0 2px #3c424d, inset 0 0 0 1px rgba(255,255,255,0.08)",
               }}
             >
+              {/* Top Speaker / Camera Notch */}
               <div
                 aria-hidden="true"
                 style={{
                   position: "absolute",
-                  top: "2px",
+                  top: "16px",
                   left: "50%",
                   transform: "translateX(-50%)",
-                  width: "84px",
+                  width: "76px",
                   height: "18px",
-                  background: "#14161a",
-                  borderBottomLeftRadius: "12px",
-                  borderBottomRightRadius: "12px",
-                  zIndex: 2,
+                  background: "#0d0f12",
+                  borderRadius: "999px",
+                  zIndex: 3,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  paddingRight: "8px",
                 }}
-              />
+              >
+                <span
+                  style={{
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    background: "#25314d",
+                    boxShadow: "inset 0 0 2px rgba(120,170,255,0.5)",
+                  }}
+                />
+              </div>
+
+              {/* Screen Viewport */}
               <div
                 style={{
+                  position: "relative",
                   width: "100%",
                   height: "100%",
                   background: "#ffffff",
-                  borderRadius: "26px",
+                  borderRadius: "30px",
                   overflow: "hidden",
                   display: "flex",
                   alignItems: "center",
@@ -129,19 +155,26 @@ export default function HowItWorksSection({ home }) {
               >
                 {activeScreenUrl ? (
                   <img
+                    key={activeScreenUrl}
                     src={activeScreenUrl}
-                    alt={activeStep?.title || `Step ${activeIndex + 1} screen`}
+                    alt={
+                      activeStep?.screenImage?.alternativeText ||
+                      activeStep?.title ||
+                      `Step ${activeIndex + 1} screen`
+                    }
                     style={{
                       width: "100%",
                       height: "100%",
                       objectFit: "cover",
+                      objectPosition: "top center",
                       display: "block",
+                      animation: "screenFadeIn 0.25s ease",
                     }}
                   />
                 ) : (
                   <div
                     style={{
-                      padding: "10px",
+                      padding: "16px",
                       textAlign: "center",
                       color: "#0b1f5e",
                     }}
@@ -150,22 +183,27 @@ export default function HowItWorksSection({ home }) {
                       style={{
                         fontSize: "14px",
                         fontWeight: 700,
-                        marginBottom: "80px",
+                        marginBottom: "48px",
                       }}
                     >
-                      Welcome to Wealth Boomers App
+                      Welcome to Wealth Bloomers App
                     </p>
                     <Image
-                              src="/logo.png"
-                              alt="Wealth Bloomers Logo"
-                              width={200}
-                              height={80}
-                              className="logo-img"
-                              priority
-                            />
-                    <div style={{ fontSize: "20px", fontWeight: 700 }}>
-                      Step &nbsp;
-                      {activeStep?.number ?? activeIndex + 1}
+                      src="/logo.png"
+                      alt="Wealth Bloomers Logo"
+                      width={180}
+                      height={72}
+                      className="logo-img"
+                      priority
+                    />
+                    <div
+                      style={{
+                        marginTop: "36px",
+                        fontSize: "20px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      Step {activeStep?.number ?? activeIndex + 1}
                     </div>
                     <div style={{ marginTop: "8px", fontWeight: 600 }}>
                       {activeStep?.title}
@@ -173,15 +211,32 @@ export default function HowItWorksSection({ home }) {
                   </div>
                 )}
               </div>
+
+              {/* Bottom Home Indicator */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  bottom: "15px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "84px",
+                  height: "4px",
+                  borderRadius: "999px",
+                  background: "rgba(255, 255, 255, 0.55)",
+                  zIndex: 3,
+                  pointerEvents: "none",
+                }}
+              />
             </div>
 
             {activeStep?.description && (
               <div
                 className="step-active-description"
                 style={{
-                  marginTop: "16px",
+                  marginTop: "18px",
                   textAlign: "center",
-                  color: "#4b5563",
+                  color: "#1e293b",
                   fontSize: "14px",
                   lineHeight: 1.5,
                 }}
@@ -203,7 +258,7 @@ export default function HowItWorksSection({ home }) {
           >
             {steps.map((step, index) => {
               const isActive = index === activeIndex;
-              const iconUrl = getStrapiMedia(step.icon?.url || step.icon);
+              const iconUrl = resolveMediaUrl(step.icon);
 
               return (
                 <button
@@ -282,6 +337,19 @@ export default function HowItWorksSection({ home }) {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes screenFadeIn {
+          from {
+            opacity: 0.35;
+            transform: scale(1.015);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      `}</style>
     </section>
   );
 }

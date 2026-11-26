@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import BlocksContent from "@/components/BlocksContent";
 import { getStrapiMedia } from "@/lib/strapi";
 
@@ -148,12 +147,9 @@ export default function HowItWorksSection({ home }) {
                   background: "#ffffff",
                   borderRadius: "30px",
                   overflow: "hidden",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                 }}
               >
-                {activeScreenUrl ? (
+                {activeScreenUrl && (
                   <img
                     key={activeScreenUrl}
                     src={activeScreenUrl}
@@ -171,44 +167,6 @@ export default function HowItWorksSection({ home }) {
                       animation: "screenFadeIn 0.25s ease",
                     }}
                   />
-                ) : (
-                  <div
-                    style={{
-                      padding: "16px",
-                      textAlign: "center",
-                      color: "#0b1f5e",
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: 700,
-                        marginBottom: "48px",
-                      }}
-                    >
-                      Welcome to Wealth Bloomers App
-                    </p>
-                    <Image
-                      src="/logo.png"
-                      alt="Wealth Bloomers Logo"
-                      width={180}
-                      height={72}
-                      className="logo-img"
-                      priority
-                    />
-                    <div
-                      style={{
-                        marginTop: "36px",
-                        fontSize: "20px",
-                        fontWeight: 700,
-                      }}
-                    >
-                      Step {activeStep?.number ?? activeIndex + 1}
-                    </div>
-                    <div style={{ marginTop: "8px", fontWeight: 600 }}>
-                      {activeStep?.title}
-                    </div>
-                  </div>
                 )}
               </div>
 

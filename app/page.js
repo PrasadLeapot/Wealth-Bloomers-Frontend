@@ -9,21 +9,17 @@ export default async function HomePage() {
     home = await fetchStrapiAPI("home");
   } catch (error) {
     console.error(error);
-    return <p className="error-message">
-      Unable to load Home page content.
-    </p>;
+    return (
+      <p className="error-message">
+        Unable to load Home page content.
+      </p>
+    );
   }
 
   const image = getStrapiMedia(
     home.heroImage?.[0]?.url
   );
 
-  // console.log("Hero Image Data:", home.heroImage);
-  // console.log(
-  //   "Hero Image URL:",
-  //   getStrapiMedia(home.heroImage?.url)
-  // );
-  
   return (
     <>
       <section className="hero">
@@ -103,7 +99,6 @@ export default async function HomePage() {
               )}
             </div>
           )}
-
         </div>
 
         {image && (
@@ -119,27 +114,6 @@ export default async function HomePage() {
         <h2>{home.introductionTitle}</h2>
         <BlocksContent content={home.introduction} />
       </section>
-
-      {/* <section className="section mission">
-        <h2>{home.missionTitle}</h2>
-        <BlocksContent content={home.missionDescription} />
-      </section> */}
-
-      {/* <section className="section">
-        <h2>{home.howItWorksTitle}</h2>
-
-        <div className="steps-grid">
-          {home.steps?.map((step, index) => (
-            <article className="step-card" key={index}>
-              <span>{step.number}</span>
-              <h3>{step.title}</h3>
-              <BlocksContent
-                content={step.description}
-              />
-            </article>
-          ))}
-        </div>
-      </section> */}
 
       <HowItWorksSection home={home} />
 

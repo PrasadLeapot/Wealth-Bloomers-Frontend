@@ -23,12 +23,12 @@ export default async function AboutPage() {
         <h1>{about.pageTitle}</h1>
       </section>
 
-      <section className="section">
+      {/* <section className="section">
         <BlocksContent content={about.introduction} />
-      </section>
+      </section> */}
 
       <section className="section team-section">
-        <h2>{about.teamTitle}</h2>
+        <h3>{about.teamTitle}</h3>
 
         <BlocksContent content={about.teamDescription} />
 

@@ -206,6 +206,7 @@ export default function HowItWorksSection({ home }) {
 
           {/* Right: Pill Step Buttons */}
           <div
+          className="step-buttons"
             style={{
               display: "flex",
               flexDirection: "column",

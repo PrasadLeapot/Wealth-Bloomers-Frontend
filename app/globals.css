@@ -474,7 +474,6 @@ button:focus-visible {
 /* Grids & Cards */
 
 .steps-grid,
-.jewellers-grid,
 .team-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -482,12 +481,8 @@ button:focus-visible {
   margin-top: 32px;
 }
 
-.jewellers-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
 
 .step-card,
-.jeweller-card,
 .person-card,
 .faq-item {
   background: var(--surface);
@@ -499,7 +494,6 @@ button:focus-visible {
 }
 
 .step-card:hover,
-.jeweller-card:hover,
 .person-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
@@ -520,7 +514,6 @@ button:focus-visible {
 }
 
 .step-card h3,
-.jeweller-card h3,
 .person-card h3 {
   color: var(--navy);
   font-size: 21px;
@@ -528,7 +521,6 @@ button:focus-visible {
 }
 
 .step-card p,
-.jeweller-card p,
 .person-card p:not(.designation) {
   color: var(--text-muted);
   font-size: 15px;
@@ -536,21 +528,208 @@ button:focus-visible {
 
 /* Jewellers */
 
-.jeweller-card {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 28px 20px;
+.jewellers-curved-section {
+  --slider-bg: var(--bg-page);      /* mask colour must equal section bg */
+  --gap: clamp(10px, 1.1vw, 18px);
+  padding: 40px 0 48px;
+  background: var(--slider-bg);
+  overflow: hidden;
 }
 
-.jeweller-card img {
-  height: 85px;
-  max-width: 100%;
-  object-fit: contain;
-  margin-bottom: 16px;
+.jewellers-curved-title {
+  text-align: center;
+  font-size: clamp(26px, 3vw, 36px);
+  color: var(--navy);
+  margin-bottom: 24px;
+  padding: 0 var(--container-pad);
 }
+
+.curved-slider-viewport {
+  --card-w: clamp(230px, 29.5vw, 466px);   /* 3 cards + peeks, like the reference */
+  --card-h: calc(var(--card-w) * 1.287);   /* 466 x 600 ratio */
+  --arc: clamp(28px, 4vw, 56px);           /* depth of the concave curve */
+
+  position: relative;
+  width: 100%;
+  height: var(--card-h);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  outline: none;
+}
+
+.curved-slider-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+/* Concave top & bottom arcs: deepest in the centre, zero at the edges */
+.curved-mask {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: var(--arc);
+  background: var(--slider-bg);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.curved-mask--top {
+  top: 0;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+.curved-mask--bottom {
+  bottom: 0;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+/* Cards are positioned by offset, so each one animates to its new slot */
+.curved-card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--card-w);
+  height: var(--card-h);
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--bg-tint);
+  cursor: pointer;
+  transform: translate3d(
+    calc(-50% + var(--offset) * (var(--card-w) + var(--gap)) + var(--drag, 0px)),
+    0,
+    0
+  );
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+  will-change: transform;
+}
+
+.curved-slider-viewport.is-dragging .curved-card {
+  transition: none;
+}
+
+.curved-card.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Media fills the whole card */
+.jeweller-card__media {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14%;
+  background: linear-gradient(180deg, var(--bg-page) 0%, var(--bg-tint) 100%);
+}
+
+.jeweller-card__media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.curved-card:hover .jeweller-card__media img {
+  transform: scale(1.04);
+}
+
+.jeweller-card__placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--accent);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+/* Caption overlay at the bottom of the card */
+.jeweller-card__content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: calc(var(--arc) + 8px) 20px calc(var(--arc) + 4px);
+  text-align: center;
+  background: linear-gradient(180deg, transparent 0%, rgba(3, 9, 36, 0.78) 100%);
+  color: var(--white);
+}
+
+.jeweller-card__content h3 {
+  font-size: 24px;
+  color: #000000;
+  margin-bottom: 6px;
+}
+
+.jeweller-card__tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--white);
+  background: rgba(7, 196, 150, 0.35);
+  border: 1px solid rgba(7, 196, 150, 0.6);
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+/* Outline circle buttons, 54px like the reference */
+.curved-slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.curved-nav-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(#151924 0%, #080a10 100%);
+  border-color: #ffffff47;
+  color: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.curved-nav-btn:hover {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.curved-nav-btn:active {
+  transform: scale(0.94);
+}
+
+@media (max-width: 768px) {
+  .curved-slider-viewport {
+    --card-w: 72vw;      /* one main card with neighbours peeking */
+    --arc: 26px;
+  }
+
+  .curved-nav-btn {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curved-card {
+    transition: none;
+  }
+}
+
 
 /* Team */
 

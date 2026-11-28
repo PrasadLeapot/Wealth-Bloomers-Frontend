@@ -1,7 +1,9 @@
 import { fetchStrapiAPI } from "@/lib/strapi";
 import BlocksContent from "@/components/BlocksContent";
 import TeamSlider from "@/components/TeamSlider";
-export const dynamic = "force-dynamic";
+
+// revalidation fetch cache 5 min
+export const revalidate = 300;
 
 export default async function AboutPage() {
   let about;
@@ -13,6 +15,14 @@ export default async function AboutPage() {
     return (
       <p className="error-message">
         Unable to load About Us page.
+      </p>
+    );
+  }
+
+  if (!about) {
+    return (
+      <p className="error-message">
+        About Us content is currently unavailable.
       </p>
     );
   }

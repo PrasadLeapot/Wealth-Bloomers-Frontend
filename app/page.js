@@ -1,6 +1,7 @@
 import { fetchStrapiAPI, getStrapiMedia } from "@/lib/strapi";
 import BlocksContent from "@/components/BlocksContent";
 import HowItWorksSection from "@/components/HowItWorks";
+import JewellerSlider from "@/components/JewellerSlider";
 
 export default async function HomePage() {
   let home;
@@ -16,17 +17,21 @@ export default async function HomePage() {
     );
   }
 
-  const image = getStrapiMedia(
-    home.heroImage?.[0]?.url
-  );
+  const image = getStrapiMedia(home.heroImage?.[0]?.url);
+
+  // Resolve media URLs on the server before passing to the Client Component
+  const jewellersList =
+    home.jewellers?.map((jeweller) => ({
+      name: jeweller.name,
+      location: jeweller.location || "",
+      logoUrl: jeweller.logo?.url ? getStrapiMedia(jeweller.logo.url) : null,
+    })) || [];
 
   return (
     <>
       <section className="hero">
         <div className="hero-content">
-          <p className="eyebrow">
-            WELCOME TO
-          </p>
+          <p className="eyebrow">WELCOME TO</p>
 
           <h1>{home.pageTitle}</h1>
 
@@ -117,24 +122,10 @@ export default async function HomePage() {
 
       <HowItWorksSection home={home} />
 
-      <section className="section">
-        <h2 style={{ textAlign: 'center', fontSize: '2rem' }}>{home.jewellersTitle}</h2>
-
-        <div className="jewellers-grid">
-          {home.jewellers?.map((jeweller, index) => (
-            <article className="jeweller-card" key={index}>
-              {jeweller.logo?.url && (
-                <img
-                  src={getStrapiMedia(jeweller.logo.url)}
-                  alt={jeweller.name}
-                />
-              )}
-
-              <h3>{jeweller.name}</h3>
-            </article>
-          ))}
-        </div>
-      </section>
+      <JewellerSlider
+        title={home.jewellersTitle}
+        jewellers={jewellersList}
+      />
     </>
   );
 }

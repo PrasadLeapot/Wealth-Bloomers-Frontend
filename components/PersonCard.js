@@ -1,39 +1,60 @@
+"use client";
+
+import { useState } from "react";
 import BlocksContent from "./BlocksContent";
 
 const STRAPI_URL = "https://strapi-wealth-bloomers.onrender.com";
 
+function getInitials(name = "") {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || "")
+    .join("");
+}
+
 export default function PersonCard({ person }) {
+  const [imgError, setImgError] = useState(false);
+
   const imageUrl = person?.photo?.url
     ? person.photo.url.startsWith("http")
       ? person.photo.url
       : `${STRAPI_URL}${person.photo.url}`
     : null;
 
-  // console.log("Person:", person.name);
-  // console.log("Photo object:", person.photo);
-  // console.log("Image URL:", imageUrl);
+  const showImage = Boolean(imageUrl) && !imgError;
 
   return (
     <article className="person-card">
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={person.name || "Team member"}
-          className="person-photo"
-          onError={(e) => {
-            console.error("Image failed:", e.currentTarget.src);
-          }}
-        />
-      )}
+      <div className="person-media-wrap">
+        <div className="person-media-backdrop" aria-hidden="true" />
+        <div className={`person-media-box ${!showImage ? "is-initials" : ""}`}>
+          {showImage ? (
+            <img
+              src={imageUrl}
+              alt={person.name || "Team member"}
+              className="person-photo"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <span className="person-initials" aria-hidden="true">
+              {getInitials(person.name) || "TM"}
+            </span>
+          )}
+        </div>
+      </div>
 
-      <div>
+      <div className="person-info">
         <h3>{person.name}</h3>
 
-        <p className="designation">
-          {person.designation}
-        </p>
+        {person.designation && (
+          <span className="designation">{person.designation}</span>
+        )}
 
-        <BlocksContent content={person.biography} />
+        <div className="person-bio">
+          <BlocksContent content={person.biography} />
+        </div>
       </div>
     </article>
   );

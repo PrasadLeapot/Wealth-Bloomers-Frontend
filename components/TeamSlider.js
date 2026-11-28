@@ -1,195 +1,196 @@
-//hand slider
 "use client";
 
 import { useRef, useState } from "react";
 import PersonCard from "./PersonCard";
 
-const DRAG_THRESHOLD = 10;
+const SWIPE_THRESHOLD = 60;
+const CLICK_TOLERANCE = 8;
 
 export default function TeamSlider({ people = [] }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
+  const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  const viewportRef = useRef(null);
-  const startXRef = useRef(null);
-  const pointerIdRef = useRef(null);
+  const startX = useRef(null);
+  const pointerId = useRef(null);
+  const captured = useRef(false);
+  const movedDistance = useRef(0);
 
-  if (!people.length) {
-    return null;
-  }
+  const total = people.length;
+  if (!total) return null;
+
+  const last = total - 1;
+  const goTo = (i) => setActiveIndex(Math.min(last, Math.max(0, i)));
+  const prevSlide = () => goTo(activeIndex - 1);
+  const nextSlide = () => goTo(activeIndex + 1);
+
+  const formatIndex = (num) => String(num).padStart(2, "0");
 
   const handlePointerDown = (e) => {
-    if (people.length <= 1) return;
+    if (total <= 1) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
 
-    startXRef.current = e.clientX;
-    pointerIdRef.current = e.pointerId;
+    startX.current = e.clientX;
+    pointerId.current = e.pointerId;
+    captured.current = false;
+    movedDistance.current = 0;
     setIsDragging(true);
-    setDragOffset(0);
-    e.currentTarget.setPointerCapture?.(e.pointerId);
   };
 
   const handlePointerMove = (e) => {
-    if (!isDragging || startXRef.current === null) return;
-    if (pointerIdRef.current !== null && e.pointerId !== pointerIdRef.current) {
-      return;
+    if (!isDragging || startX.current === null) return;
+    if (e.pointerId !== pointerId.current) return;
+
+    const delta = e.clientX - startX.current;
+    movedDistance.current = Math.abs(delta);
+
+    if (!captured.current && movedDistance.current > CLICK_TOLERANCE) {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+      captured.current = true;
     }
 
-    const deltaX = e.clientX - startXRef.current;
-
-    // Gentle resistance at the very first or last slide
-    const atStart = activeIndex === 0 && deltaX > 0;
-    const atEnd = activeIndex === people.length - 1 && deltaX < 0;
-    const adjustedDelta = atStart || atEnd ? deltaX * 0.25 : deltaX;
-
-    setDragOffset(adjustedDelta);
+    const atStart = activeIndex === 0 && delta > 0;
+    const atEnd = activeIndex === last && delta < 0;
+    setDragX(atStart || atEnd ? delta * 0.25 : delta);
   };
 
-  const finishDrag = (e) => {
-    if (!isDragging || startXRef.current === null) return;
-    if (pointerIdRef.current !== null && e?.pointerId !== undefined && e.pointerId !== pointerIdRef.current) {
-      return;
+  const endDrag = (e) => {
+    if (!isDragging) return;
+    if (e?.pointerId !== undefined && e.pointerId !== pointerId.current) return;
+
+    if (captured.current) {
+      e?.currentTarget?.releasePointerCapture?.(pointerId.current);
     }
 
-    if (pointerIdRef.current !== null) {
-      e?.currentTarget?.releasePointerCapture?.(pointerIdRef.current);
-    }
+    if (dragX < -SWIPE_THRESHOLD) nextSlide();
+    else if (dragX > SWIPE_THRESHOLD) prevSlide();
 
-    const deltaX = dragOffset;
-    const width = viewportRef.current?.clientWidth || 300;
-    const threshold = Math.min(DRAG_THRESHOLD, width * 0.2);
-
-    if (deltaX < -threshold && activeIndex < people.length - 1) {
-      setActiveIndex((prev) => prev + 1);
-    } else if (deltaX > threshold && activeIndex > 0) {
-      setActiveIndex((prev) => prev - 1);
-    }
-
-    startXRef.current = null;
-    pointerIdRef.current = null;
-    setDragOffset(0);
+    startX.current = null;
+    pointerId.current = null;
+    captured.current = false;
+    setDragX(0);
     setIsDragging(false);
+    setTimeout(() => (movedDistance.current = 0), 0);
   };
 
   const handleKeyDown = (e) => {
-    if (people.length <= 1) return;
-    if (e.key === "ArrowLeft") {
-      setActiveIndex((prev) => Math.max(0, prev - 1));
-    } else if (e.key === "ArrowRight") {
-      setActiveIndex((prev) => Math.min(people.length - 1, prev + 1));
-    }
+    if (e.key === "ArrowLeft") prevSlide();
+    if (e.key === "ArrowRight") nextSlide();
   };
 
   return (
     <div
-      className="team-slider"
+      className="team-curved"
       aria-roledescription="carousel"
       aria-label="Team members"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
     >
       <div
-        ref={viewportRef}
-        className={`team-slider-viewport ${isDragging ? "is-dragging" : ""}`}
+        className={`team-curved-viewport ${isDragging ? "is-dragging" : ""}`}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
-        onPointerUp={finishDrag}
-        onPointerCancel={finishDrag}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
       >
         <div
-          className="team-slider-track"
-          style={{
-            transform: `translateX(calc(-${activeIndex * 100}% + ${dragOffset}px))`,
-            transition: isDragging
-              ? "none"
-              : "transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1)",
-          }}
+          className="team-curved-track"
+          style={{ "--index": activeIndex, "--drag": `${dragX}px` }}
         >
-          {people.map((person, index) => (
-            <div className="team-slide" key={person.id ?? person.name ?? index}>
-              <PersonCard person={person} />
-            </div>
-          ))}
+          {people.map((person, index) => {
+            const isActive = index === activeIndex;
+            return (
+              <div
+                key={person.id ?? person.name ?? index}
+                className={`team-curved-slide ${isActive ? "is-active" : ""}`}
+                aria-hidden={!isActive}
+                onClick={() => {
+                  if (movedDistance.current > CLICK_TOLERANCE) return;
+                  if (!isActive) goTo(index);
+                }}
+              >
+                <PersonCard person={person} />
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      {total > 1 && (
+        <div className="curved-slider-controls">
+          <button
+            type="button"
+            className="curved-nav-btn"
+            onClick={prevSlide}
+            disabled={activeIndex === 0}
+            aria-label="Previous team member"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+          </button>
+
+          <div className="team-slider-status">
+            <span className="team-slider-counter" aria-hidden="true">
+              <strong>{formatIndex(activeIndex + 1)}</strong>
+              <span className="counter-sep">/</span>
+              <span>{formatIndex(total)}</span>
+            </span>
+
+            <div
+              className="team-curved-dots"
+              role="tablist"
+              aria-label="Select team member"
+            >
+              {people.map((person, index) => (
+                <button
+                  key={person.id ?? person.name ?? index}
+                  type="button"
+                  role="tab"
+                  aria-selected={index === activeIndex}
+                  aria-label={`Go to ${person.name || `member ${index + 1}`}`}
+                  className={`team-curved-dot ${
+                    index === activeIndex ? "is-active" : ""
+                  }`}
+                  onClick={() => goTo(index)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="curved-nav-btn"
+            onClick={nextSlide}
+            disabled={activeIndex === last}
+            aria-label="Next team member"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
-
-
-//button slider
-// "use client";
-
-// import { useState } from "react";
-// import PersonCard from "./PersonCard";
-
-// export default function TeamSlider({ people = [] }) {
-//   const [activeIndex, setActiveIndex] = useState(0);
-
-//   if (!people.length) {
-//     return null;
-//   }
-
-//   const handlePrev = () => {
-//     setActiveIndex((prev) => (prev === 0 ? people.length - 1 : prev - 1));
-//   };
-
-//   const handleNext = () => {
-//     setActiveIndex((prev) => (prev === people.length - 1 ? 0 : prev + 1));
-//   };
-
-//   return (
-//     <div className="team-slider" aria-roledescription="carousel" aria-label="Team members">
-//       <div className="team-slider-viewport">
-//         <div
-//           className="team-slider-track"
-//           style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-//         >
-//           {people.map((person, index) => (
-//             <div className="team-slide" key={person.id ?? person.name ?? index}>
-//               <PersonCard person={person} />
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//       {people.length > 1 && (
-//         <div className="team-slider-controls">
-//           <button
-//             type="button"
-//             className="slider-btn"
-//             onClick={handlePrev}
-//             aria-label="Previous team member"
-//           >
-//             ←
-//           </button>
-
-//           <div className="slider-dots" role="tablist" aria-label="Select team member">
-//             {people.map((person, index) => (
-//               <button
-//                 key={person.id ?? person.name ?? index}
-//                 type="button"
-//                 role="tab"
-//                 aria-selected={activeIndex === index}
-//                 aria-label={`Go to ${person.name || `slide ${index + 1}`}`}
-//                 className={`slider-dot ${activeIndex === index ? "slider-dot--active" : ""}`}
-//                 onClick={() => setActiveIndex(index)}
-//               />
-//             ))}
-//           </div>
-
-//           <button
-//             type="button"
-//             className="slider-btn"
-//             onClick={handleNext}
-//             aria-label="Next team member"
-//           >
-//             →
-//           </button>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-

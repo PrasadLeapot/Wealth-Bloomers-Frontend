@@ -29,18 +29,19 @@ export default async function AboutPage() {
 
   return (
     <>
-      <section className="page-hero">
-        <h1>{about.pageTitle}</h1>
+      <section className="page-hero about-hero">
+        <div className="about-hero__inner">
+          <span className="eyebrow">Our Team</span>
+          <h1>{about.pageTitle}</h1>
+          <span className="about-hero__bar" aria-hidden="true" />
+        </div>
       </section>
 
-      {/* <section className="section">
-        <BlocksContent content={about.introduction} />
-      </section> */}
-
       <section className="section team-section">
-        <h3>{about.teamTitle}</h3>
-
-        <BlocksContent content={about.teamDescription} />
+        <div className="team-section__header">
+          {/* <h2>{about.teamTitle}</h2> */}
+          <BlocksContent content={about.teamDescription} />
+        </div>
 
         <TeamSlider people={about.people} />
       </section>

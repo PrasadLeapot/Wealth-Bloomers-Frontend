@@ -529,7 +529,7 @@ button:focus-visible {
 /* Jewellers */
 
 .jewellers-curved-section {
-  --slider-bg: var(--bg-page);      /* mask colour must equal section bg */
+  --slider-bg: var(--bg-page);
   --gap: clamp(10px, 1.1vw, 18px);
   padding: 40px 0 48px;
   background: var(--slider-bg);
@@ -545,9 +545,12 @@ button:focus-visible {
 }
 
 .curved-slider-viewport {
-  --card-w: clamp(230px, 29.5vw, 466px);   /* 3 cards + peeks, like the reference */
-  --card-h: calc(var(--card-w) * 1.287);   /* 466 x 600 ratio */
-  --arc: clamp(28px, 4vw, 56px);           /* depth of the concave curve */
+  --card-w: clamp(230px, 29.5vw, 466px);
+  /* 3 cards + peeks, like the reference */
+  --card-h: calc(var(--card-w) * 1.287);
+  /* 466 x 600 ratio */
+  --arc: clamp(28px, 4vw, 56px);
+  /* depth of the concave curve */
 
   position: relative;
   width: 100%;
@@ -595,11 +598,9 @@ button:focus-visible {
   border-radius: 0;
   background: var(--bg-tint);
   cursor: pointer;
-  transform: translate3d(
-    calc(-50% + var(--offset) * (var(--card-w) + var(--gap)) + var(--drag, 0px)),
-    0,
-    0
-  );
+  transform: translate3d(calc(-50% + var(--offset) * (var(--card-w) + var(--gap)) + var(--drag, 0px)),
+      0,
+      0);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
@@ -709,13 +710,23 @@ button:focus-visible {
 
 @media (max-width: 768px) {
   .curved-slider-viewport {
-    --card-w: 72vw;      /* one main card with neighbours peeking */
+    --card-w: 72vw;
+    /* one main card with neighbours peeking */
     --arc: 26px;
   }
 
   .curved-nav-btn {
     width: 46px;
     height: 46px;
+  }
+
+}
+
+@media (max-width: 380px) {
+  .jeweller-card__content h3 {
+    font-size: 18px;
+    color: #000000;
+    margin-bottom: 6px;
   }
 }
 
@@ -1057,7 +1068,7 @@ button:focus-visible {
     gap: 36px;
   }
 
-    .hero-image {
+  .hero-image {
     width: 350px;
     height: 310px;
     max-height: none;
@@ -1092,7 +1103,7 @@ button:focus-visible {
     font-size: 16px;
   }
 
-    .step-buttons {
+  .step-buttons {
     display: none !important;
   }
 

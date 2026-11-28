@@ -540,7 +540,6 @@ button:focus-visible {
   text-align: center;
   font-size: clamp(26px, 3vw, 36px);
   color: var(--navy);
-  margin-bottom: 24px;
   padding: 0 var(--container-pad);
 }
 
